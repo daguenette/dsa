@@ -1,14 +1,13 @@
 const std = @import("std");
 
 pub fn main() !void {
+    const arr = [2][]const u8{ "Hello", "World" };
 
     // Start timing
     const start_time: i128 = std.time.nanoTimestamp();
 
     // Action
-    const arr = [18]i32{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 };
-    const target = 7;
-    const result: SearchResult = binarySearch(&arr, target);
+    const result: bool = simpleLinearSearch(&arr, "World");
 
     // End timing
     const end_time: i128 = std.time.nanoTimestamp();
@@ -16,8 +15,7 @@ pub fn main() !void {
     const elapsed_time_s = @as(f64, @floatFromInt(elapsed_time_ns)) / 1_000_000_000.0;
 
     // Print
-    std.debug.print("Found: {}\n", .{result.isFound});
-    std.debug.print("At Index: {?}\n", .{result.atIndex});
+    std.debug.print("{}\n", .{result});
     std.debug.print("Time elapsed: {} ns ({d:.6} s)\n", .{
         elapsed_time_ns,
         elapsed_time_s,
@@ -26,71 +24,15 @@ pub fn main() !void {
 
 // ---------------------------------------------------------------
 // Data Type: Array.
-// Algorithm: Linear Search | Binary Search
+// Algorithm: Linear Search
 // ---------------------------------------------------------------
-const SearchResult = struct { isFound: bool, atIndex: ?usize };
-
 pub fn simpleLinearSearch(arr: []const []const u8, term: []const u8) bool {
-    for (arr, 0..) |elem, index| {
+    for (arr) |elem| {
         if (std.mem.eql(u8, elem, term)) {
-            return SearchResult{
-                .isFound = true,
-                .atIndex = index,
-            };
+            return true;
         }
     }
-    return SearchResult{
-        .isFound = false,
-        .atIndex = null,
-    };
-}
-
-pub fn recursiveBinarySearch(arr: []const i32, target: i32, low: usize, high: usize) SearchResult {
-    if (low > high) {
-        return SearchResult{
-            .isFound = false,
-            .atIndex = null,
-        };
-    }
-
-    const mid = low + (high - low) / 2;
-
-    if (arr[mid] == target) {
-        return SearchResult{
-            .isFound = true,
-            .atIndex = mid,
-        };
-    } else if (arr[mid] > target) {
-        return recursiveBinarySearch(arr, target, low, mid - 1);
-    } else {
-        return recursiveBinarySearch(arr, target, mid + 1, high);
-    }
-}
-
-pub fn binarySearch(arr: []const i32, target: i32) SearchResult {
-    var low: usize = 0;
-    var high: usize = arr.len - 1;
-
-    while (low <= high) {
-        const mid = low + (high - low) / 2;
-        const value = arr[mid];
-
-        if (value == target) {
-            return SearchResult{
-                .isFound = true,
-                .atIndex = mid,
-            };
-        } else if (value > target) {
-            high = mid - 1;
-        } else {
-            low = mid + 1;
-        }
-    }
-
-    return SearchResult{
-        .isFound = false,
-        .atIndex = null,
-    };
+    return false;
 }
 
 // ---------------------------------------------------------------
