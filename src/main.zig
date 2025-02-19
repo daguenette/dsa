@@ -45,7 +45,7 @@ pub fn simpleLinearSearch(arr: []const []const u8, term: []const u8) bool {
     };
 }
 
-pub fn recursiveBinarySearch(arr: []const i32, target: i32, low: usize, high: usize) SearchResult {
+pub fn recursiveBinarySearch(sortedArr: []const i32, target: i32, low: usize, high: usize) SearchResult {
     if (low > high) {
         return SearchResult{
             .isFound = false,
@@ -55,25 +55,25 @@ pub fn recursiveBinarySearch(arr: []const i32, target: i32, low: usize, high: us
 
     const mid = low + (high - low) / 2;
 
-    if (arr[mid] == target) {
+    if (sortedArr[mid] == target) {
         return SearchResult{
             .isFound = true,
             .atIndex = mid,
         };
-    } else if (arr[mid] > target) {
-        return recursiveBinarySearch(arr, target, low, mid - 1);
+    } else if (sortedArr[mid] > target) {
+        return recursiveBinarySearch(sortedArr, target, low, mid - 1);
     } else {
-        return recursiveBinarySearch(arr, target, mid + 1, high);
+        return recursiveBinarySearch(sortedArr, target, mid + 1, high);
     }
 }
 
-pub fn binarySearch(arr: []const i32, target: i32) SearchResult {
+pub fn binarySearch(sortedArr: []const i32, target: i32) SearchResult {
     var low: usize = 0;
-    var high: usize = arr.len - 1;
+    var high: usize = sortedArr.len - 1;
 
     while (low <= high) {
         const mid = low + (high - low) / 2;
-        const value = arr[mid];
+        const value = sortedArr[mid];
 
         if (value == target) {
             return SearchResult{
